@@ -168,13 +168,20 @@ Dedicado a los modelos clásicos y avanzados de optimización combinatoria sobre
    - Soporte para capacidades finitas o ilimitadas ($\infty$) y costos unitarios arbitrarios.
    - Resolución exacta mediante el algoritmo de **Caminos Mínimos Sucesivos** (*Successive Shortest Path*) con SPFA/Bellman-Ford sobre la red residual.
    - Detalle de iteraciones, caminos mínimos utilizados, potenciales duales y cálculo del costo global $Z^*$.
-4. **Flujo de Trabajo y Paradigma CIMS en Redes:**
+4. **Problema de Transporte — Métodos de Asignación Inicial (Heurísticas Clásicas):**
+   - **Método de la Esquina Noroeste (NWC):** asignación inicial factible por posición geográfica $O(m+n)$; comienza en la celda noroeste activa, asigna $x_{ij} = \min(S_i, D_j)$ y avanza hacia abajo o a la derecha según se agote la oferta o la demanda. Línea base que ignora los costos.
+   - **Método del Costo Mínimo (LCM — *Least Cost Method*):** asignación inicial factible por costo global $O(m \cdot n)$; selecciona en cada iteración la celda activa con el menor costo unitario $c_{ij}$ de toda la matriz y elimina la fila o columna agotada.
+   - **Aproximación de Vogel (VAM — *Vogel's Approximation Method*):** asignación inicial factible por penalización $O(m \cdot n \log n)$; calcula en cada iteración $|c_1 - c_2|$ entre los dos menores costos activos de cada fila y columna, elige la línea de mayor penalización (costo de oportunidad) y asigna en su celda más barata. Empates resueltos de forma determinista.
+   - Los tres métodos comparten validación de entradas, balanceo automático con línea ficticia de costo 0 cuando $\sum S_i \neq \sum D_j$, detección de degeneración ($m < m+n-1$), verificación de sumas fila/columna y procedimiento paso a paso con las asignaciones y el costo total $Z$.
+   - **Ejercicio del PDF asociado** (*Problema transporte metodos*): problema $3 \times 3$ balanceado con 3 plantas y 3 ciudades ($\sum = 450$) — $Z_{NWC} = 1{,}700$ (línea base), $Z_{LCM} = Z_{VAM} = 1{,}100$ (ahorro del 35.3%).
+5. **Flujo de Trabajo y Paradigma CIMS en Redes:**
    - **Carga de Plantillas sin Auto-Cálculo Prematuro:** Al seleccionar cualquier ejercicio preconfigurado del menú superior, los datos se despliegan en la tabla para revisión y modificación libre; el cálculo se ejecuta únicamente cuando el usuario presiona "Calcular".
    - **Bloqueo Reactivo de Pestañas:** Para garantizar coherencia metodológica y evitar cruces de datos accidentales, al trabajar en una pestaña activa o con un ejercicio precargado, las otras dos pestañas quedan protegidas hasta presionar "Limpiar" o cambiar de preconfiguración.
-   - **Catálogo de 10 Ejercicios Preconfigurados:**
+   - **Catálogo de 13 Ejercicios Preconfigurados:**
      - **Asignación:** Centrales Térmicas ($3\times 3$ Min, $Z^*=17$), Vendedores a Zonas ($3\times 3$ Max, $Z^*=200$), Caso Desbalanceado ($3\times 4$ Min, $Z^*=500$), Técnicos a Máquinas ($4\times 4$ Min, $Z^*=22$), Vendedores a Zonas ($4\times 4$ Max, $Z_{max}=89$) y Operarios a Tareas ($3\times 4$ Desbalanceado, $Z^*=21$).
      - **Flujo Máximo:** Red de Distribución (6 nodos, 8 arcos capacitados, Flujo óptimo = 14, Corte $S/T = 14$).
      - **Flujo a Costo Mínimo:** Red 4 Nodos Capacitada ($Z^*=26$), Modelo de Transporte ($2\times 3$, $Z^*=350$) y Transbordo Multidestino (5 nodos, $Z^*=24$).
+     - **Problema de Transporte (PDF):** Esquina Noroeste ($Z=1{,}700$), Costo Mínimo LCM ($Z=1{,}100$) y Aproximación de Vogel ($Z=1{,}100$) sobre el mismo problema $3\times 3$ balanceado de 3 plantas y 3 ciudades.
 
 ---
 
@@ -277,6 +284,10 @@ Para modelos bidimensionales ($x_1, x_2$), el motor proyecta en un lienzo intera
 - **Algoritmo Húngaro:** Transforma la matriz de costos restando mínimos de fila y columna, cubriendo los ceros con el número mínimo de líneas e iterando hasta encontrar un emparejamiento perfecto.
 - **Edmonds-Karp:** Variante del método de Ford-Fulkerson que utiliza una búsqueda en amplitud (BFS) para seleccionar el camino de aumento más corto en cantidad de arcos dentro de la red residual, garantizando una cota superior estricta $O(V \cdot E^2)$.
 - **Flujo a Costo Mínimo:** Envía iterativamente flujo a través de caminos de costo residual mínimo augmentando capacidades y ajustando potenciales duales de nodo para mantener la no negatividad de los costos reducidos.
+- **Heurísticas de Asignación Inicial del Problema de Transporte:**
+  - *Esquina Noroeste (NWC):* recorrido posicional desde la celda superior izquierda; barato de aplicar pero ignora los costos (línea base subóptima).
+  - *Costo Mínimo (LCM):* asigna en la celda de costo unitario global más bajo de la matriz activa.
+  - *Aproximación de Vogel (VAM):* prioriza la línea con mayor penalización $|c_1 - c_2|$ (costo de oportunidad); el mejor heurístico general para la Fase 1.
 
 ---
 
@@ -414,7 +425,11 @@ COIS-Calculadora-de-Operaciones-Investigativas-Suite/
     │   ├── utils/                     # Motores matemáticos cliente de optimización en redes
     │   │   ├── hungarianSolver.js     # Algoritmo de Kuhn-Munkres (Húngaro) con balanceo y König
     │   │   ├── maxFlowSolver.js       # Algoritmo de Edmonds-Karp (BFS) y Teorema de Corte Mínimo
-    │   │   └── minCostFlowSolver.js   # Algoritmo de Caminos Mínimos Sucesivos (MCFP) y potenciales
+    │   │   ├── minCostFlowSolver.js   # Algoritmo de Caminos Mínimos Sucesivos (MCFP) y potenciales
+    │   │   ├── transportCommon.js      # Validación, balanceo y contrato común de los métodos de transporte
+    │   │   ├── northwestCornerSolver.js # Método de la Esquina Noroeste (NWC)
+    │   │   ├── leastCostSolver.js      # Método del Costo Mínimo (LCM / Least Cost)
+    │   │   └── vogelSolver.js          # Aproximación de Vogel (VAM) con penalizaciones
     │   ├── App.vue                    # Componente raíz con control reactivo de vistas
     │   ├── main.js                    # Inicializador de la aplicación Vue
     │   └── style.css                  # Tokens globales, variables de color y tipografía
