@@ -19,6 +19,9 @@ def networks_status():
         "algorithms": [
             "kuhn_munkres_hungarian",
             "edmonds_karp_max_flow",
-            "successive_shortest_path_min_cost_flow"
+            "successive_shortest_path_min_cost_flow",
+            "northwest_corner_nwc",
+            "least_cost_method_lcm",
+            "vogel_approximation_vam"
         ]
     }
