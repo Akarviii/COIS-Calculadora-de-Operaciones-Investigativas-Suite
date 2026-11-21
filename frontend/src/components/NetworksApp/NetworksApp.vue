@@ -636,7 +636,353 @@
       </section>
 
       <!-- ============================================================== -->
-      <!-- TAB 3: FLUJO A COSTO MÍNIMO (MCFP) — MODO CALCULADORA           -->
+      <!-- TABS 3-5: PROBLEMA DE TRANSPORTE (NWC / LCM / VOGEL)            -->
+      <!-- ============================================================== -->
+      <section v-else-if="isTransportTab" class="tab-content">
+        <!-- Header -->
+        <div class="tab-header">
+          <div>
+            <h2 class="section-title">{{ currentTransportConfig.title }}</h2>
+            <p class="section-subtitle">{{ currentTransportConfig.subtitle }}</p>
+          </div>
+          <div class="quick-stats">
+            <span class="pill-tech">{{ currentTransportConfig.complexity }}</span>
+            <span class="pill-tech">Asignación Inicial</span>
+            <span v-if="selectedExerciseId && selectedExerciseId.startsWith('trans_')" class="pill-tech pill-purple">
+              Modo Ejercicio Activo
+            </span>
+            <span v-else class="pill-tech pill-green">Modo Libre Desbloqueado</span>
+          </div>
+        </div>
+
+        <!-- Panel de Control y Configuración de Entrada -->
+        <div class="calc-control-card">
+          <div class="control-row">
+            <!-- Selector de Orígenes (Filas) -->
+            <div class="control-group">
+              <label class="control-label">Orígenes (Filas):</label>
+              <div class="stepper-box">
+                <button
+                  type="button"
+                  class="btn-step"
+                  :disabled="currentTransport.rows <= 2"
+                  @click="changeTransportDims(currentTransport.rows - 1, currentTransport.cols)"
+                  title="Reducir orígenes"
+                >
+                  -
+                </button>
+                <span class="step-value">{{ currentTransport.rows }}</span>
+                <button
+                  type="button"
+                  class="btn-step"
+                  :disabled="currentTransport.rows >= 6"
+                  @click="changeTransportDims(currentTransport.rows + 1, currentTransport.cols)"
+                  title="Aumentar orígenes"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <!-- Selector de Destinos (Columnas) -->
+            <div class="control-group">
+              <label class="control-label">Destinos (Columnas):</label>
+              <div class="stepper-box">
+                <button
+                  type="button"
+                  class="btn-step"
+                  :disabled="currentTransport.cols <= 2"
+                  @click="changeTransportDims(currentTransport.rows, currentTransport.cols - 1)"
+                  title="Reducir destinos"
+                >
+                  -
+                </button>
+                <span class="step-value">{{ currentTransport.cols }}</span>
+                <button
+                  type="button"
+                  class="btn-step"
+                  :disabled="currentTransport.cols >= 6"
+                  @click="changeTransportDims(currentTransport.rows, currentTransport.cols + 1)"
+                  title="Aumentar destinos"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <!-- Dim Badge -->
+            <div class="dim-status-badge" :class="{ 'is-rect': currentTransport.rows !== currentTransport.cols }">
+              <span class="badge-size-text">{{ currentTransport.rows }} × {{ currentTransport.cols }}</span>
+              <small>Matriz de Transporte</small>
+            </div>
+
+            <!-- Balance Badge (Σ Oferta vs Σ Demanda) -->
+            <div class="balance-status-box" :class="transportTotals.balanced ? 'badge-balanced' : 'badge-unbalanced'">
+              <span>Σ Oferta = {{ transportTotals.supply }} · Σ Demanda = {{ transportTotals.demand }}</span>
+              <small v-if="transportTotals.balanced">(Modelo Balanceado)</small>
+              <small v-else>(Desbalanceado: se añadirá línea ficticia)</small>
+            </div>
+          </div>
+
+          <!-- Tabla de Transporte: Costos + Ofertas + Demanda -->
+          <div class="matrix-input-container">
+            <div class="matrix-input-header">
+              <span class="matrix-caption">Matriz de costos unitarios cᵢⱼ, ofertas Sᵢ y demandas Dⱼ:</span>
+              <div class="action-buttons-group">
+                <button
+                  type="button"
+                  class="btn-action btn-solve"
+                  @click="calculateTransport"
+                  :title="currentTransportConfig.cta"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  <span>{{ currentTransportConfig.cta }}</span>
+                </button>
+                <button
+                  type="button"
+                  class="btn-action btn-clear"
+                  @click="clearTransport"
+                  title="Limpiar matriz y reiniciar"
+                >
+                  Limpiar
+                </button>
+              </div>
+            </div>
+
+            <div class="table-container matrix-table-wrap">
+              <table class="editable-matrix-table transport-table">
+                <thead>
+                  <tr>
+                    <th class="corner-header">Origen \ Destino</th>
+                    <th v-for="(colLabel, cIdx) in currentTransport.colLabels" :key="'th' + cIdx">
+                      <input
+                        type="text"
+                        class="header-name-input"
+                        v-model="currentTransport.colLabels[cIdx]"
+                        @input="handleTransportInput"
+                        :title="'Nombre de destino ' + (cIdx + 1)"
+                      />
+                    </th>
+                    <th class="th-supply">Oferta (Sᵢ)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(rowLabel, rIdx) in currentTransport.rowLabels" :key="'tr' + rIdx">
+                    <td class="row-label-cell">
+                      <input
+                        type="text"
+                        class="header-name-input"
+                        v-model="currentTransport.rowLabels[rIdx]"
+                        @input="handleTransportInput"
+                        :title="'Nombre de origen ' + (rIdx + 1)"
+                      />
+                    </td>
+                    <td
+                      v-for="(val, cIdx) in currentTransport.costs[rIdx]"
+                      :key="'td' + cIdx"
+                      class="matrix-cell-td"
+                    >
+                      <div class="cell-wrapper">
+                        <input
+                          type="number"
+                          step="any"
+                          class="matrix-cell-input"
+                          v-model.number="currentTransport.costs[rIdx][cIdx]"
+                          @input="handleTransportInput"
+                          placeholder="0"
+                          :title="'Costo unitario c(' + (rIdx + 1) + ',' + (cIdx + 1) + ')'"
+                        />
+                      </div>
+                    </td>
+                    <td class="cell-supply">
+                      <input
+                        type="number"
+                        step="any"
+                        min="0"
+                        class="table-input"
+                        v-model.number="currentTransport.supplies[rIdx]"
+                        @input="handleTransportInput"
+                        placeholder="S"
+                        :title="'Oferta de ' + rowLabel"
+                      />
+                    </td>
+                  </tr>
+                  <tr class="tr-demand">
+                    <td class="row-label-cell demand-label">Demanda (Dⱼ)</td>
+                    <td v-for="(val, cIdx) in currentTransport.demands" :key="'dm' + cIdx" class="cell-demand">
+                      <input
+                        type="number"
+                        step="any"
+                        min="0"
+                        class="table-input"
+                        v-model.number="currentTransport.demands[cIdx]"
+                        @input="handleTransportInput"
+                        placeholder="D"
+                        :title="'Demanda de ' + currentTransport.colLabels[cIdx]"
+                      />
+                    </td>
+                    <td class="cell-total" :class="{ 'is-balanced': transportTotals.balanced }">
+                      {{ transportTotals.supply }} / {{ transportTotals.demand }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerta de Error -->
+        <div v-if="currentTransport.error" class="calc-error-banner">
+          <span class="err-icon">⚠️</span>
+          <span>{{ currentTransport.error }}</span>
+        </div>
+
+        <!-- Ficha de Resultado de la Asignación Inicial -->
+        <div v-if="currentTransport.result" class="exercise-card">
+          <div class="exercise-header">
+            <div>
+              <div class="badge-tag-row">
+                <span class="type-badge badge-blue">{{ currentTransport.result.methodLabel }}</span>
+                <span class="dim-badge">{{ currentTransport.result.origRows }} × {{ currentTransport.result.origCols }}</span>
+                <span v-if="!currentTransport.result.isBalanced" class="dim-badge badge-amber">
+                  + Línea Ficticia
+                </span>
+                <span v-if="currentTransport.result.isDegenerate" class="dim-badge badge-amber">
+                  Degenerada ({{ currentTransport.result.basicCells }} &lt; {{ currentTransport.result.requiredBasic }})
+                </span>
+              </div>
+              <h3 class="exercise-title">Asignación Inicial Factible Obtenida</h3>
+            </div>
+            <div class="solution-highlight">
+              <span class="sol-label">Costo Total Inicial (Z):</span>
+              <span class="sol-value">{{ currentTransport.result.totalZDisplay }}</span>
+            </div>
+          </div>
+
+          <!-- Nota de Balanceo (si hubo línea ficticia) -->
+          <div v-if="currentTransport.result.balanceNote" class="balance-note-box">
+            <span class="balance-note-icon">⚖️</span>
+            <span>{{ currentTransport.result.balanceNote }}</span>
+          </div>
+
+          <!-- Matriz de Asignaciones -->
+          <div class="matrix-section">
+            <h4 class="sub-title">Matriz de Asignaciones xᵢⱼ (con costo unitario)</h4>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Origen \ Destino</th>
+                    <th v-for="(colLabel, cIdx) in currentTransport.result.colLabels" :key="'rc' + cIdx">
+                      {{ colLabel }}
+                    </th>
+                    <th>Oferta Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(rowLabel, rIdx) in currentTransport.result.rowLabels" :key="'rr' + rIdx">
+                    <td class="row-label">{{ rowLabel }}</td>
+                    <td
+                      v-for="(colLabel, cIdx) in currentTransport.result.colLabels"
+                      :key="'ra' + cIdx"
+                      :class="{ 'cell-optimal': currentTransport.result.allocationMatrix[rIdx][cIdx] > 0 }"
+                    >
+                      <template v-if="currentTransport.result.allocationMatrix[rIdx][cIdx] > 0">
+                        <strong>{{ formatQty(currentTransport.result.allocationMatrix[rIdx][cIdx]) }}</strong>
+                        <span class="cell-unit-cost">(${{ formatQty(currentTransport.result.workingCosts[rIdx][cIdx]) }})</span>
+                      </template>
+                      <span v-else class="cell-empty">—</span>
+                    </td>
+                    <td class="cell-supply-total">{{ formatQty(currentTransport.result.workingSupplies[rIdx]) }}</td>
+                  </tr>
+                  <tr class="tr-demand">
+                    <td class="row-label">Demanda Total</td>
+                    <td v-for="(dVal, cIdx) in currentTransport.result.workingDemands" :key="'rd' + cIdx">
+                      {{ formatQty(dVal) }}
+                    </td>
+                    <td class="cell-supply-total">{{ currentTransport.result.totalZDisplay }} = Z</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Resumen y Verificación -->
+          <div class="optimal-result-box">
+            <div class="result-header">
+              <span class="res-icon">📦</span>
+              <div>
+                <strong>Plan de Distribución Inicial ({{ currentTransport.result.methodLabel }})</strong>
+                <p>{{ currentTransport.result.summary }}</p>
+              </div>
+            </div>
+            <div class="assignments-pills-list">
+              <div
+                v-for="(asig, aIdx) in currentTransport.result.assignments"
+                :key="'p' + aIdx"
+                class="asig-pill"
+                :class="{ 'asig-dummy': asig.isDummy }"
+              >
+                <span class="asig-pair">{{ asig.from }} ➜ {{ asig.to }}</span>
+                <span class="asig-cost">{{ asig.amountDisplay }} × {{ asig.costDisplay }} = {{ asig.subtotalDisplay }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pasos Didácticos -->
+          <div class="procedure-box">
+            <h4 class="sub-title">Procedimiento Paso a Paso ({{ currentTransport.result.methodLabel }})</h4>
+            <div class="steps-list">
+              <div v-for="(step, sIdx) in currentTransport.result.steps" :key="'s' + sIdx" class="step-item">
+                <span class="step-num">{{ sIdx + 1 }}</span>
+                <div class="step-content">
+                  <strong>{{ step.title }}:</strong>
+                  <span>{{ step.detail }}</span>
+
+                  <!-- Tablas de penalización por iteración (solo Vogel) -->
+                  <div v-if="step.rowPenalties" class="penalty-tables">
+                    <table class="data-table mini-table">
+                      <thead>
+                        <tr><th>Fila</th><th>Penalización</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(p, pIdx) in step.rowPenalties"
+                          :key="'pr' + pIdx"
+                          :class="{ 'penalty-max': step.chosenType === 'row' && step.chosenIndex === pIdx }"
+                        >
+                          <td class="row-label">{{ currentTransport.result.rowLabels[pIdx] }}</td>
+                          <td>{{ p === null ? '—' : formatQty(p) }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table class="data-table mini-table">
+                      <thead>
+                        <tr><th>Columna</th><th>Penalización</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(p, pIdx) in step.colPenalties"
+                          :key="'pc' + pIdx"
+                          :class="{ 'penalty-max': step.chosenType === 'col' && step.chosenIndex === pIdx }"
+                        >
+                          <td class="row-label">{{ currentTransport.result.colLabels[pIdx] }}</td>
+                          <td>{{ p === null ? '—' : formatQty(p) }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================== -->
+      <!-- TAB 6: FLUJO A COSTO MÍNIMO (MCFP) — MODO CALCULADORA           -->
       <!-- ============================================================== -->
       <section v-else class="tab-content">
         <div class="tab-header">
@@ -907,10 +1253,14 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, reactive, watch, onMounted } from 'vue'
 import { solveHungarian } from '../../utils/hungarianSolver.js'
 import { solveMaxFlow } from '../../utils/maxFlowSolver.js'
 import { solveMinCostFlow } from '../../utils/minCostFlowSolver.js'
+import { solveNorthwestCorner } from '../../utils/northwestCornerSolver.js'
+import { solveLeastCost } from '../../utils/leastCostSolver.js'
+import { solveVogel } from '../../utils/vogelSolver.js'
+import { formatQty } from '../../utils/transportCommon.js'
 
 const props = defineProps({
   activeTab: {
@@ -1183,6 +1533,160 @@ function clearMcfp() {
 }
 
 // =========================================================================
+// TABS 3-5: PROBLEMA DE TRANSPORTE (ESQUINA NOROESTE / COSTO MÍNIMO / VOGEL)
+// Estado independiente por pestaña + configuración del método.
+// =========================================================================
+const transportTabs = ['transport_nw', 'transport_lcm', 'transport_vogel']
+
+function createTransportState() {
+  return {
+    rows: 3,
+    cols: 3,
+    rowLabels: ['Origen 1', 'Origen 2', 'Origen 3'],
+    colLabels: ['Destino 1', 'Destino 2', 'Destino 3'],
+    costs: [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', '']
+    ],
+    supplies: ['', '', ''],
+    demands: ['', '', ''],
+    result: null,
+    error: null
+  }
+}
+
+const transportState = reactive({
+  transport_nw: createTransportState(),
+  transport_lcm: createTransportState(),
+  transport_vogel: createTransportState()
+})
+
+const transportConfigs = {
+  transport_nw: {
+    title: 'Problema de Transporte — Método de la Esquina Noroeste (NWC)',
+    subtitle:
+      'Asignación inicial factible por posición geográfica: comienza en la celda noroeste activa, asigna xᵢⱼ = min(Sᵢ, Dⱼ) y avanza hacia abajo (oferta agotada) o a la derecha (demanda satisfecha). Ignora los costos: es la línea base.',
+    complexity: 'Complejidad: O(m+n)',
+    cta: 'Calcular Esquina Noroeste',
+    solver: solveNorthwestCorner
+  },
+  transport_lcm: {
+    title: 'Problema de Transporte — Método del Costo Mínimo (LCM)',
+    subtitle:
+      'Asignación inicial factible por costo global: selecciona en cada iteración la celda activa con el menor costo unitario cᵢⱼ de toda la matriz, asigna xᵢⱼ = min(Sᵢ, Dⱼ) y elimina la fila o columna agotada.',
+    complexity: 'Complejidad: O(m·n)',
+    cta: 'Calcular Costo Mínimo',
+    solver: solveLeastCost
+  },
+  transport_vogel: {
+    title: 'Problema de Transporte — Aproximación de Vogel (VAM)',
+    subtitle:
+      'Asignación inicial factible por penalización (costo de oportunidad): calcula |c₁ − c₂| entre los dos menores costos activos de cada fila y columna, elige la línea de mayor penalización y asigna en su celda más barata.',
+    complexity: 'Complejidad: O(m·n log n)',
+    cta: 'Calcular Vogel',
+    solver: solveVogel
+  }
+}
+
+const isTransportTab = computed(() => transportTabs.includes(props.activeTab))
+const currentTransport = computed(() => transportState[props.activeTab] || transportState.transport_nw)
+const currentTransportConfig = computed(() => transportConfigs[props.activeTab] || transportConfigs.transport_nw)
+
+const transportTotals = computed(() => {
+  const st = currentTransport.value
+  const supply = st.supplies.reduce((acc, v) => acc + (Number(v) || 0), 0)
+  const demand = st.demands.reduce((acc, v) => acc + (Number(v) || 0), 0)
+  const rounded = (n) => Math.round(n * 1e6) / 1e6
+  return {
+    supply: rounded(supply),
+    demand: rounded(demand),
+    balanced: Math.abs(supply - demand) < 1e-9 && supply > 0
+  }
+})
+
+function changeTransportDims(newRows, newCols) {
+  if (newRows < 2 || newRows > 6 || newCols < 2 || newCols > 6) return
+
+  const st = currentTransport.value
+  const oldCosts = st.costs
+  const oldSupplies = st.supplies
+  const oldDemands = st.demands
+  const oldRowLabels = st.rowLabels
+  const oldColLabels = st.colLabels
+
+  const newCosts = []
+  for (let i = 0; i < newRows; i++) {
+    const row = []
+    for (let j = 0; j < newCols; j++) {
+      row.push(oldCosts[i] && oldCosts[i][j] !== undefined ? oldCosts[i][j] : '')
+    }
+    newCosts.push(row)
+  }
+
+  st.costs = newCosts
+  st.supplies = Array.from({ length: newRows }, (_, i) => (oldSupplies[i] !== undefined ? oldSupplies[i] : ''))
+  st.demands = Array.from({ length: newCols }, (_, j) => (oldDemands[j] !== undefined ? oldDemands[j] : ''))
+  st.rowLabels = Array.from({ length: newRows }, (_, i) => (oldRowLabels[i] !== undefined ? oldRowLabels[i] : `Origen ${i + 1}`))
+  st.colLabels = Array.from({ length: newCols }, (_, j) => (oldColLabels[j] !== undefined ? oldColLabels[j] : `Destino ${j + 1}`))
+  st.rows = newRows
+  st.cols = newCols
+
+  // Paradigma CIMS: alterar dimensiones invalida el resultado previo (sin auto-cálculo)
+  st.result = null
+  st.error = null
+}
+
+function handleTransportInput() {
+  // Al editar se invalida el cálculo previo mientras el usuario escribe
+  const st = currentTransport.value
+  st.result = null
+  st.error = null
+}
+
+function calculateTransport() {
+  const st = currentTransport.value
+  const cfg = currentTransportConfig.value
+  st.error = null
+
+  const hasAnyValue =
+    st.costs.some(row => row.some(v => v !== '' && v !== null && v !== undefined && !isNaN(Number(v)))) ||
+    st.supplies.some(v => v !== '' && v !== null && v !== undefined && !isNaN(Number(v))) ||
+    st.demands.some(v => v !== '' && v !== null && v !== undefined && !isNaN(Number(v)))
+
+  if (!hasAnyValue) {
+    st.error = 'Ingresa la matriz de costos, las ofertas y las demandas, o selecciona un ejercicio preconfigurado para calcular.'
+    st.result = null
+    return
+  }
+
+  try {
+    st.result = cfg.solver(st.costs, st.supplies, st.demands, st.rowLabels, st.colLabels)
+  } catch (err) {
+    st.error = err.message || 'Error al calcular la asignación inicial del transporte.'
+    st.result = null
+  }
+}
+
+function clearTransport() {
+  const st = currentTransport.value
+  st.rows = 3
+  st.cols = 3
+  st.rowLabels = ['Origen 1', 'Origen 2', 'Origen 3']
+  st.colLabels = ['Destino 1', 'Destino 2', 'Destino 3']
+  st.costs = [
+    ['', '', ''],
+    ['', '', ''],
+    ['', '', '']
+  ]
+  st.supplies = ['', '', '']
+  st.demands = ['', '', '']
+  st.result = null
+  st.error = null
+  emit('clear-exercise')
+}
+
+// =========================================================================
 // DATA: EJERCICIOS PREDEFINIDOS DE ASIGNACIÓN
 // =========================================================================
 const assignmentExercises = {
@@ -1263,6 +1767,45 @@ const assignmentExercises = {
 }
 
 // =========================================================================
+// DATA: EJERCICIOS DE TRANSPORTE (PDF "Problema transporte metodos")
+// Problema 3×3 balanceado: 3 Plantas → 3 Ciudades, Σ Oferta = Σ Demanda = 450.
+// Z esperados: NWC = 1700 · LCM = 1100 · VAM = 1100
+// =========================================================================
+const transportPdfProblem = {
+  rows: 3,
+  cols: 3,
+  rowLabels: ['Planta P₁', 'Planta P₂', 'Planta P₃'],
+  colLabels: ['Ciudad D₁', 'Ciudad D₂', 'Ciudad D₃'],
+  costs: [
+    [5, 2, 8],
+    [3, 6, 4],
+    [7, 4, 1]
+  ],
+  supplies: [100, 200, 150],
+  demands: [150, 150, 150]
+}
+
+const transportExercises = {
+  trans_nw_pdf: { tab: 'transport_nw', expectedZ: '1700', ...transportPdfProblem },
+  trans_lcm_pdf: { tab: 'transport_lcm', expectedZ: '1100', ...transportPdfProblem },
+  trans_vogel_pdf: { tab: 'transport_vogel', expectedZ: '1100', ...transportPdfProblem }
+}
+
+function loadTransportExercise(ex) {
+  const st = transportState[ex.tab]
+  st.rows = ex.rows
+  st.cols = ex.cols
+  st.rowLabels = [...ex.rowLabels]
+  st.colLabels = [...ex.colLabels]
+  st.costs = ex.costs.map(row => [...row])
+  st.supplies = [...ex.supplies]
+  st.demands = [...ex.demands]
+  // Paradigma CIMS: precarga datos sin auto-cálculo; el usuario pulsa "Calcular"
+  st.result = null
+  st.error = null
+}
+
+// =========================================================================
 // WATCHER: Sincronización reactiva con selección de ejercicios desde el Navbar
 // =========================================================================
 watch(() => props.selectedExerciseId, (newId) => {
@@ -1308,6 +1851,20 @@ watch(() => props.selectedExerciseId, (newId) => {
     ]
     mcfpResult.value = null
     mcfpError.value = null
+
+    // 4. Reset Transporte (NWC / LCM / VOGEL)
+    transportTabs.forEach(tabKey => {
+      const fresh = createTransportState()
+      transportState[tabKey].rows = fresh.rows
+      transportState[tabKey].cols = fresh.cols
+      transportState[tabKey].rowLabels = fresh.rowLabels
+      transportState[tabKey].colLabels = fresh.colLabels
+      transportState[tabKey].costs = fresh.costs
+      transportState[tabKey].supplies = fresh.supplies
+      transportState[tabKey].demands = fresh.demands
+      transportState[tabKey].result = null
+      transportState[tabKey].error = null
+    })
     return
   }
 
@@ -1396,6 +1953,11 @@ watch(() => props.selectedExerciseId, (newId) => {
     ]
     mcfpResult.value = null
     mcfpError.value = null
+  }
+
+  // Si es un ejercicio de Problema de Transporte (PDF):
+  if (transportExercises[newId]) {
+    loadTransportExercise(transportExercises[newId])
   }
 }, { immediate: true })
 

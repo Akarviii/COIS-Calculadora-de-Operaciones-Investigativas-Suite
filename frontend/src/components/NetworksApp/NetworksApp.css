@@ -1298,4 +1298,128 @@
   margin-bottom: 16px;
 }
 
+/* =========================================================================
+   TABLA DE TRANSPORTE (NWC / LCM / VOGEL)
+   ========================================================================= */
+.transport-table .th-supply {
+  background: rgba(56, 189, 248, 0.08);
+  color: #38BDF8;
+  font-size: 0.78rem;
+  font-weight: 700;
+  min-width: 110px;
+}
+
+.transport-table .cell-supply {
+  background: rgba(56, 189, 248, 0.05);
+  min-width: 110px;
+}
+
+.transport-table .tr-demand .demand-label {
+  color: #A78BFA;
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.transport-table .tr-demand .cell-demand {
+  background: rgba(139, 92, 246, 0.05);
+  min-width: 80px;
+}
+
+.transport-table .cell-total {
+  background: rgba(21, 30, 46, 0.9);
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  color: #94A3B8;
+  text-align: center;
+  min-width: 110px;
+}
+
+.transport-table .cell-total.is-balanced {
+  color: #34D399;
+}
+
+/* Nota de balanceo con línea ficticia */
+.balance-note-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #FCD34D;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.84rem;
+}
+
+.balance-note-icon {
+  font-size: 1rem;
+}
+
+/* Celdas de la matriz de asignaciones */
+.data-table .cell-unit-cost {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #64748B;
+  font-family: var(--font-mono, monospace);
+}
+
+.data-table .cell-optimal .cell-unit-cost {
+  color: rgba(16, 185, 129, 0.75);
+}
+
+.data-table .cell-empty {
+  color: #334155;
+}
+
+.data-table .cell-supply-total {
+  background: rgba(21, 30, 46, 0.6);
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  color: #CBD5E1;
+}
+
+.data-table .tr-demand td {
+  background: rgba(139, 92, 246, 0.06);
+  color: #C4B5FD;
+  font-weight: 600;
+}
+
+.data-table .tr-demand td.cell-supply-total {
+  background: rgba(21, 30, 46, 0.9);
+  color: #94A3B8;
+  font-size: 0.8rem;
+}
+
+/* Tablas de penalización (Vogel) dentro de los pasos */
+.penalty-tables {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.penalty-tables .mini-table {
+  width: auto;
+  font-size: 0.78rem;
+}
+
+.penalty-tables .mini-table th,
+.penalty-tables .mini-table td {
+  padding: 5px 12px;
+}
+
+.penalty-tables .mini-table .penalty-max {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #FCD34D !important;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .penalty-tables {
+    flex-direction: column;
+  }
+}
+
+
 
