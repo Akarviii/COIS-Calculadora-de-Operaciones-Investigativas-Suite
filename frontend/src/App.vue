@@ -108,6 +108,12 @@ function handleSelectNetworkExercise(exerciseId) {
     networksTab.value = 'max_flow'
   } else if (['mcfp_1', 'mcfp_2', 'mcfp_3'].includes(exerciseId)) {
     networksTab.value = 'min_cost_flow'
+  } else if (exerciseId === 'trans_nw_pdf') {
+    networksTab.value = 'transport_nw'
+  } else if (exerciseId === 'trans_lcm_pdf') {
+    networksTab.value = 'transport_lcm'
+  } else if (exerciseId === 'trans_vogel_pdf') {
+    networksTab.value = 'transport_vogel'
   }
 }
 

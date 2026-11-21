@@ -369,6 +369,33 @@
           >
             <span>Flujo a Costo Mínimo</span>
           </button>
+          <button
+            class="net-tab-btn"
+            :class="{ active: networksTab === 'transport_nw', 'is-locked': isTabLocked('transport_nw') }"
+            :disabled="isTabLocked('transport_nw')"
+            @click="!isTabLocked('transport_nw') && $emit('update:networksTab', 'transport_nw')"
+            :title="isTabLocked('transport_nw') ? 'Pestaña bloqueada por ejercicio activo. Pulsa Limpiar o selecciona otro ejercicio en el menú superior.' : ''"
+          >
+            <span>Esquina Noroeste</span>
+          </button>
+          <button
+            class="net-tab-btn"
+            :class="{ active: networksTab === 'transport_lcm', 'is-locked': isTabLocked('transport_lcm') }"
+            :disabled="isTabLocked('transport_lcm')"
+            @click="!isTabLocked('transport_lcm') && $emit('update:networksTab', 'transport_lcm')"
+            :title="isTabLocked('transport_lcm') ? 'Pestaña bloqueada por ejercicio activo. Pulsa Limpiar o selecciona otro ejercicio en el menú superior.' : ''"
+          >
+            <span>Costo Mínimo</span>
+          </button>
+          <button
+            class="net-tab-btn"
+            :class="{ active: networksTab === 'transport_vogel', 'is-locked': isTabLocked('transport_vogel') }"
+            :disabled="isTabLocked('transport_vogel')"
+            @click="!isTabLocked('transport_vogel') && $emit('update:networksTab', 'transport_vogel')"
+            :title="isTabLocked('transport_vogel') ? 'Pestaña bloqueada por ejercicio activo. Pulsa Limpiar o selecciona otro ejercicio en el menú superior.' : ''"
+          >
+            <span>Vogel (VAM)</span>
+          </button>
         </nav>
 
         <!-- Custom Networks Exercises Dropdown (Exact same design and styling as CIMS) -->
@@ -599,7 +626,7 @@
                 </div>
                 <div class="item-text">
                   <span class="item-title">{{ item.title }}</span>
-                  <span class="item-desc">{{ item.desc }}</span>
+                  <span class="item-desc" :class="{ 'one-line': item.oneLine }">{{ item.desc }}</span>
                 </div>
                 <svg
                   v-if="selectedNetExercise?.id === item.id"
@@ -862,6 +889,38 @@ const networkExerciseGroups = [
         icon: "infinity",
         iconClass: "icon-purple",
         desc: "Nodo 1 a nodos 4 y 5 mediante transbordo (Z* = 24)",
+      },
+    ],
+  },
+  {
+    category: "Problema de Transporte",
+    items: [
+      {
+        id: "trans_nw_pdf",
+        tab: "transport_nw",
+        title: "Esquina Noroeste (3x3)",
+        icon: "layers",
+        iconClass: "icon-cyan",
+        oneLine: true,
+        desc: "3 plantas → 3 ciudades, Σ = 450 · Z = 1,700",
+      },
+      {
+        id: "trans_lcm_pdf",
+        tab: "transport_lcm",
+        title: "Costo Mínimo (3x3)",
+        icon: "factory",
+        iconClass: "icon-emerald",
+        oneLine: true,
+        desc: "3 plantas → 3 ciudades, Σ = 450 · Z = 1,100",
+      },
+      {
+        id: "trans_vogel_pdf",
+        tab: "transport_vogel",
+        title: "Aproximación de Vogel (3x3)",
+        icon: "layers",
+        iconClass: "icon-indigo",
+        oneLine: true,
+        desc: "3 plantas → 3 ciudades, Σ = 450 · Z = 1,100",
       },
     ],
   },

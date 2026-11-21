@@ -121,6 +121,14 @@
               <span class="feature-icon icon-emerald">❖</span>
               <span>Flujo a Costo Mínimo (Min-Cost Flow / Successive Path)</span>
             </li>
+            <li>
+              <span class="feature-icon icon-emerald">❖</span>
+              <span>Problema de Transporte: Esquina Noroeste y Costo Mínimo (LCM)</span>
+            </li>
+            <li>
+              <span class="feature-icon icon-emerald">❖</span>
+              <span>Aproximación de Vogel (VAM) con Penalizaciones</span>
+            </li>
           </ul>
 
           <div class="cta-wrapper">

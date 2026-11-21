@@ -232,7 +232,12 @@
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  width: 320px;
+  width: 340px;
+  max-height: calc(100vh - 130px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.35) transparent;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -242,6 +247,23 @@
   padding: 6px;
   z-index: 100;
   animation: fadeInDown 0.15s ease-out;
+}
+
+.dropdown-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.3);
+  border-radius: 8px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.5);
 }
 
 .dropdown-header {
@@ -354,6 +376,13 @@
   font-size: 0.7rem;
   color: var(--text-muted);
   margin-top: 2px;
+}
+
+/* Descripción en una sola línea (enunciado compacto) con corte si excede */
+.item-desc.one-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .check-selected {
