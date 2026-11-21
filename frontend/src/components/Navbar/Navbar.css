@@ -11,6 +11,56 @@
   user-select: none;
 }
 
+/* =========================================================================
+   RESPONSIVE: navbar deslizable horizontalmente en pantallas estrechas.
+   Sin esto, pestañas/dropdown/badge API quedan recortados fuera del
+   viewport (app-root es overflow: hidden y no permite llegar a ellos).
+   Solo aplica ≤1320px; en escritorio amplio todo cabe y no hay scrollbar.
+   ========================================================================= */
+@media (max-width: 1320px) {
+  .navbar {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(56, 189, 248, 0.35) transparent;
+  }
+
+  .navbar::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .navbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .navbar::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.3);
+    border-radius: 8px;
+  }
+
+  .navbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(56, 189, 248, 0.5);
+  }
+
+  /* Los bloques no se comprimen: se desplazan en vez de envolverse
+     (si se comprimieran, el subtítulo se apilaría en varias líneas y
+     overflow-y: hidden lo recortaría). */
+  .nav-brand-container,
+  .nav-controls {
+    flex-shrink: 0;
+  }
+}
+
+/* Móvil: el subtítulo del brand ocupa líneas y empuja el contenido;
+   se oculta para acortar el recorrido horizontal del navbar. */
+@media (max-width: 700px) {
+  .nav-subtitle {
+    display: none;
+  }
+}
+
 .nav-brand-container {
   display: flex;
   align-items: center;
@@ -247,6 +297,22 @@
   padding: 6px;
   z-index: 100;
   animation: fadeInDown 0.15s ease-out;
+}
+
+/* RESPONSIVE (≤1320px): el navbar tiene overflow-x: auto + overflow-y:
+   hidden, lo que recortaría el menú absoluto por debajo de los 64px del
+   header. Con position: fixed el menú escapa al clip (no hay transform
+   en la cadena de ancestros) y queda anclado al viewport. Esta regla va
+   DESPUÉS de la base: misma especificidad, gana la última. */
+@media (max-width: 1320px) {
+  .dropdown-menu {
+    position: fixed;
+    top: 70px;
+    right: 8px;
+    left: auto;
+    width: min(340px, calc(100vw - 16px));
+    max-height: calc(100vh - 84px);
+  }
 }
 
 .dropdown-menu::-webkit-scrollbar {

@@ -1298,6 +1298,21 @@
   margin-bottom: 16px;
 }
 
+@media (max-width: 700px) {
+  /* Los pills del encabezado se cortaban en móvil: se envuelven debajo
+     del título y se les permite encoger (flex-shrink heredado era 0
+     y desbordaban el viewport). */
+  .tab-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .quick-stats {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+  }
+}
+
 /* =========================================================================
    TABLA DE TRANSPORTE (NWC / LCM / VOGEL)
    ========================================================================= */
