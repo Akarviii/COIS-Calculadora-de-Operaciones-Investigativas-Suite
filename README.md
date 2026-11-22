@@ -6,7 +6,7 @@
   <p><em>Resolución analítica exacta paso a paso, aritmética de fracciones racionales puras, álgebra matricial y visualización interactiva.</em></p>
 
   [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-  [![FastAPI](https://img.shields.io/badge/FastAPI-2.0%20(0.110%2B)-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+  [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
   [![Vue 3](https://img.shields.io/badge/Vue.js-3.5%2B-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://vuejs.org/)
   [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
   [![Version](https://img.shields.io/badge/Release-v2.0%20(Suite%20Generation)-0284C7?style=for-the-badge)](#-visión-general)
@@ -32,7 +32,7 @@ La suite cuenta con una arquitectura de interfaz dividida en módulos temáticos
         <img src="frontend/public/logo_cims.png" alt="COIS-IMS" width="90"/><br/>
         <strong>MÓDULO I: COIS-IMS</strong><br/>
         <em>Investigación del Método Simplex</em><br/>
-        Programación Lineal Continua, Simplex Tabular, Dos Fases, Simplex Revisado ($B^{-1}$), Sensibilidad Post-Óptima y Gráfico 2D.
+        Programación Lineal Continua, Simplex Tabular, Dos Fases, Simplex Revisado (B⁻¹), Sensibilidad Post-Óptima y Gráfico 2D.
       </td>
       <td align="center" width="50%">
         <img src="frontend/public/logo_cims_network.png" alt="COIS-Networks" width="90"/><br/>
@@ -50,7 +50,7 @@ La suite cuenta con una arquitectura de interfaz dividida en módulos temáticos
 
 - [Visión General](#-visión-general)
 - [Versiones del Proyecto](#-versiones-del-proyecto)
-  - [Versión 1.0 — CIMS (Calculadora Monoproducto Simplex)](#versión-10--cims-calculadora-investigativa-del-método-simplex)
+  - [Versión 1.0 — CIMS (Calculadora Investigativa del Método Simplex)](#versión-10--cims-calculadora-investigativa-del-método-simplex)
   - [Versión 2.0 — COIS Suite (Ecosistema Multimódulo Actual)](#versión-20--cois-suite-calculadora-de-operaciones-investigativas-suite---actual)
 - [Módulos de la Suite](#-módulos-de-la-suite)
   - [Módulo I: COIS-IMS (Programación Lineal & Simplex)](#módulo-i-cois-ims-programación-lineal--simplex)
@@ -58,7 +58,7 @@ La suite cuenta con una arquitectura de interfaz dividida en módulos temáticos
 - [Fundamentos Matemáticos y Algorítmicos](#-fundamentos-matemáticos-y-algorítmicos)
   - [1. Aritmética de Fracciones Racionales Exactas](#1-aritmética-de-fracciones-racionales-exactas)
   - [2. Método Simplex Tabular y Método de Dos Fases](#2-método-simplex-tabular-y-método-de-dos-fases)
-  - [3. Método Simplex Revisado (Formulación Matricial con $B^{-1}$)](#3-método-simplex-revisado-formulación-matricial-con-b-1)
+  - [3. Método Simplex Revisado (Formulación Matricial con B⁻¹)](#3-método-simplex-revisado-formulación-matricial-con-b-1)
   - [4. Análisis de Sensibilidad y Post-Optimización](#4-análisis-de-sensibilidad-y-post-optimización)
   - [5. Regla de Bland (Anti-Ciclado)](#5-regla-de-bland-anti-ciclado)
   - [6. Visualización Gráfica Geométrica 2D](#6-visualización-gráfica-geométrica-2d)
@@ -71,6 +71,7 @@ La suite cuenta con una arquitectura de interfaz dividida en módulos temáticos
   - [1. Configuración del Backend (FastAPI)](#1-configuración-del-backend-fastapi)
   - [2. Configuración del Frontend (Vue 3 + Vite)](#2-configuración-del-frontend-vue-3--vite)
   - [3. Ejecución de Pruebas Automatizadas (Pytest)](#3-ejecución-de-pruebas-automatizadas-pytest)
+- [Uso Rápido](#-uso-rápido)
 - [Documentación de la API REST](#-documentación-de-la-api-rest)
 - [Configuración de Git e Integridad](#-configuración-de-git-e-integridad)
 - [Aviso Académico, Propiedad Intelectual y Derechos de Autor](#-aviso-académico-propiedad-intelectual-y-derechos-de-autor)
@@ -94,7 +95,7 @@ La versión renovada actual consolida un salto generacional hacia una plataforma
 - **Evolución a Suite Multimódulo:** Se introduce el **Hub Central** (`ModuleSelector.vue`) con arquitectura desacoplada para navegar fluidamente entre distintas disciplinas de optimización matemática.
 - **Módulo I Renovado (COIS-IMS):**
   - Motor de fracciones racionales exactas de 2.ª generación (eliminación completa de imprecisiones por punto flotante).
-  - Simplex Tabular y Método de Dos Fases con visualización paso a paso, pivotes destacados y fórmulas $\LaTeX$.
+  - Simplex Tabular y Método de Dos Fases con visualización paso a paso, narración de cada paso y pivotes destacados.
   - Simplex Revisado matricial con descomposición explícita de $\mathbf{B}^{-1}$ y multiplicadores duales $\boldsymbol{\pi}$.
   - Análisis de sensibilidad post-óptimo con cálculo de precios sombra y rangos admisibles $[\underline{b}_i, \bar{b}_i]$ y $[\underline{c}_j, \bar{c}_j]$.
   - Trazado geométrico interactivo en tiempo real de la región factible y trayectoria en Canvas 2D.
@@ -104,8 +105,8 @@ La versión renovada actual consolida un salto generacional hacia una plataforma
   - Problema de Asignación con el Algoritmo de Kuhn-Munkres / Húngaro ($O(n^3)$), con soporte para matrices rectangulares desbalanceadas, maximización y asignaciones prohibidas (costo $M$).
   - Problema de Flujo Máximo mediante Edmonds-Karp / Ford-Fulkerson ($O(V \cdot E^2)$) y visualización del Teorema de Corte Mínimo (*Max-Flow Min-Cut*).
   - Problema de Flujo a Costo Mínimo (*Min-Cost Flow*) mediante caminos mínimos sucesivos y potenciales duales.
-- **Backend FastAPI 2.0:** Arquitectura modular orientada a principios SOLID con routers desacoplados (`routes_health.py`, `routes_simplex.py`, `routes_networks.py`), validaciones Pydantic v2 fail-fast y suite de 23 pruebas automatizadas al 100%.
-- **Frontend SPA de Última Generación:** Vue 3.5, Vite 8, Dark Mode Glassmorphism, alternador reactivo fracción/decimal, dock con telemetría de API en tiempo real y animaciones celebratorias con confeti.
+- **Backend FastAPI 2.0:** Arquitectura modular orientada a principios SOLID con routers desacoplados (`routes_health.py`, `routes_simplex.py`, `routes_networks.py`), validaciones Pydantic v2 fail-fast y suite de 27 pruebas automatizadas al 100%.
+- **Frontend SPA de Última Generación:** Vue 3.5, Vite 8, Dark Mode Glassmorphism, alternador reactivo fracción/decimal, indicador de estado de la API con sondeo periódico y animaciones celebratorias con confeti.
 
 #### Cuadro Comparativo: v1.0 vs. v2.0
 
@@ -117,7 +118,7 @@ La versión renovada actual consolida un salto generacional hacia una plataforma
 | **Navegación / Hub** | Vista única sin transiciones | **Lanzador Central interactivo (`ModuleSelector`)** |
 | **Backend REST** | Archivo monolítico | **Enrutadores modulares y desacoplados** |
 | **Validación de Datos** | Validaciones elementales | **Pydantic v2 fail-fast con respuestas 422 y 400** |
-| **Suite de Pruebas** | Pruebas básicas | **23 pruebas unitarias e integración (100% efectivas)** |
+| **Suite de Pruebas** | Pruebas básicas | **27 pruebas unitarias y de integración (100% efectivas)** |
 | **Diseño y UX** | Interfaz básica | **Dark Mode Glassmorphism, Canvas 2D y monitor API** |
 
 ## 🚀 Módulos de la Suite
@@ -126,7 +127,7 @@ La versión renovada actual consolida un salto generacional hacia una plataforma
 
 Especializado en la formulación, exploración y resolución analítica de problemas continuos de programación lineal:
 
-- **Resolución Exacta con Fracciones:** Cálculos sin pérdida de precisión (`1/3`, `-7/12`, etc.), con alternancia en tiempo real a decimales (`0.333...`) y formato $\LaTeX$.
+- **Resolución Exacta con Fracciones:** Cálculos sin pérdida de precisión (`1/3`, `-7/12`, etc.), con alternancia en tiempo real a decimales (`0.333...`).
 - **Objetivos Flexibles:** Maximización y Minimización con cualquier combinación de restricciones lineales ($\le$, $\ge$, $=$).
 - **Tratamiento Automático de Restricciones Mixtas:** Inclusión de variables de holgura ($s_i$), exceso ($e_i$) y artificiales ($a_i$) con orquestación del **Método de Dos Fases**.
 - **Diagnóstico Riguroso de Casos Especiales:**
@@ -140,9 +141,9 @@ Especializado en la formulación, exploración y resolución analítica de probl
   - Costos reducidos de variables no básicas.
   - Clasificación de restricciones en activas (*Binding*) o inactivas (*Non-Binding*).
   - Intervalos permisibles de variación (aumento y disminución) para coeficientes de la función objetivo ($c_j$) y lados derechos de recursos ($b_i$).
-- **Visualizador 2D en Canvas:** Dibujo automático del polígono de soluciones factibles, semiespacios, vector gradiente de la función objetivo y recorrido iterativo vértice por vértice.
+- **Visualizador 2D en Canvas:** Dibujo automático de la región factible sombreada, las rectas frontera de cada restricción y el recorrido iterativo vértice por vértice hasta el óptimo, con el punto óptimo etiquetado.
 - **Reproductor de Iteraciones:** Controles paso a paso (anterior, siguiente, ir al final) con renderizado dinámico de la tabla simplex, pivotes destacados y prueba de la razón mínima.
-- **Modo Comparativo Tabular vs. Revisado:** Ejecución simultánea de ambos métodos con validación cruzada y medición de tiempos en milisegundos.
+- **Modo Comparativo Tabular vs. Revisado:** el backend ejecuta ambos métodos sobre el mismo modelo, verifica que coincidan (bandera de consistencia) y reporta los tiempos en milisegundos; la interfaz muestra el resultado del método estándar.
 
 ---
 
@@ -155,9 +156,9 @@ Dedicado a los modelos clásicos y avanzados de optimización combinatoria sobre
    - Selector reactivo de objetivo: **Minimizar (Costo)** o **Maximizar (Ganancia)** mediante transformación $c'_{ij} = \max(p) - p_{ij}$.
    - Controles de ajuste dimensional en tiempo real ($2 \times 2$ hasta $6 \times 6$) con edición directa de celdas y etiquetas personalizadas de recursos y tareas.
    - Manejo automático de problemas rectangulares desbalanceados ($m \neq n$) incorporando filas o columnas ficticias con costo 0.
-   - Procedimiento didáctico paso a paso: Paso 0 (Balanceo ficticio), Paso 1 (Reducción por filas $u_i$), Paso 2 (Reducción por columnas $v_j$), Paso 3 (Cobertura de ceros con líneas mínimas de König $L = n$ y ajuste iterativo con $\theta$).
+   - Procedimiento didáctico paso a paso en la interfaz: Paso 0 (Balanceo ficticio), Paso 1 (Reducción por filas $u_i$), Paso 2 (Reducción por columnas $v_j$) y Paso 3 (Matriz reducida con ceros). Internamente, el solver cubre los ceros con el mínimo de líneas del **Teorema de König** ($L = n$) y ajusta iterativamente con $\theta$ hasta hallar el emparejamiento perfecto.
 2. **Problema de Flujo Máximo (Edmonds-Karp / BFS):**
-   - Calculadora interactiva con tabla de arcos dirigida y capacitada, permitiendo agregar y eliminar arcos dinámicamente en caliente.
+   - Calculadora interactiva con tabla de arcos dirigidos y capacitados, permitiendo agregar y eliminar arcos dinámicamente en caliente.
    - Configuración flexible de nodo Fuente ($s$) y nodo Sumidero ($t$).
    - Algoritmo de **Edmonds-Karp** ($O(V \cdot E^2)$) implementado mediante búsqueda en amplitud (BFS) en la red residual para garantizar el camino aumentante más corto en número de arcos.
    - Reporte iteración a iteración con identificación del cuello de botella ($\delta$) y flujo acumulado.
@@ -172,16 +173,16 @@ Dedicado a los modelos clásicos y avanzados de optimización combinatoria sobre
    - **Método de la Esquina Noroeste (NWC):** asignación inicial factible por posición geográfica $O(m+n)$; comienza en la celda noroeste activa, asigna $x_{ij} = \min(S_i, D_j)$ y avanza hacia abajo o a la derecha según se agote la oferta o la demanda. Línea base que ignora los costos.
    - **Método del Costo Mínimo (LCM — *Least Cost Method*):** asignación inicial factible por costo global $O(m \cdot n)$; selecciona en cada iteración la celda activa con el menor costo unitario $c_{ij}$ de toda la matriz y elimina la fila o columna agotada.
    - **Aproximación de Vogel (VAM — *Vogel's Approximation Method*):** asignación inicial factible por penalización $O(m \cdot n \log n)$; calcula en cada iteración $|c_1 - c_2|$ entre los dos menores costos activos de cada fila y columna, elige la línea de mayor penalización (costo de oportunidad) y asigna en su celda más barata. Empates resueltos de forma determinista.
-   - Los tres métodos comparten validación de entradas, balanceo automático con línea ficticia de costo 0 cuando $\sum S_i \neq \sum D_j$, detección de degeneración ($m < m+n-1$), verificación de sumas fila/columna y procedimiento paso a paso con las asignaciones y el costo total $Z$.
-   - **Ejercicio del PDF asociado** (*Problema transporte metodos*): problema $3 \times 3$ balanceado con 3 plantas y 3 ciudades ($\sum = 450$) — $Z_{NWC} = 1{,}700$ (línea base), $Z_{LCM} = Z_{VAM} = 1{,}100$ (ahorro del 35.3%).
+   - Los tres métodos comparten validación de entradas, balanceo automático con línea ficticia de costo 0 cuando $\sum S_i \neq \sum D_j$, detección de degeneración (asignaciones $< m + n - 1$), verificación de sumas fila/columna y procedimiento paso a paso con las asignaciones y el costo total $Z$.
+   - **Ejercicio de Transporte (referencia):** problema $3 \times 3$ balanceado con 3 plantas y 3 ciudades ($\sum = 450$) — $Z_{NWC} = 1{,}700$ (línea base), $Z_{LCM} = Z_{VAM} = 1{,}100$ (ahorro del 35.3%).
 5. **Flujo de Trabajo y Paradigma CIMS en Redes:**
    - **Carga de Plantillas sin Auto-Cálculo Prematuro:** Al seleccionar cualquier ejercicio preconfigurado del menú superior, los datos se despliegan en la tabla para revisión y modificación libre; el cálculo se ejecuta únicamente cuando el usuario presiona "Calcular".
-   - **Bloqueo Reactivo de Pestañas:** Para garantizar coherencia metodológica y evitar cruces de datos accidentales, al trabajar en una pestaña activa o con un ejercicio precargado, las otras dos pestañas quedan protegidas hasta presionar "Limpiar" o cambiar de preconfiguración.
+   - **Bloqueo Reactivo de Pestañas:** Para garantizar coherencia metodológica y evitar cruces de datos accidentales, mientras un ejercicio precargado está activo las demás pestañas quedan protegidas hasta presionar "Limpiar" o cambiar de preconfiguración.
    - **Catálogo de 13 Ejercicios Preconfigurados:**
      - **Asignación:** Centrales Térmicas ($3\times 3$ Min, $Z^*=17$), Vendedores a Zonas ($3\times 3$ Max, $Z^*=200$), Caso Desbalanceado ($3\times 4$ Min, $Z^*=500$), Técnicos a Máquinas ($4\times 4$ Min, $Z^*=22$), Vendedores a Zonas ($4\times 4$ Max, $Z_{max}=89$) y Operarios a Tareas ($3\times 4$ Desbalanceado, $Z^*=21$).
-     - **Flujo Máximo:** Red de Distribución (6 nodos, 8 arcos capacitados, Flujo óptimo = 14, Corte $S/T = 14$).
+     - **Flujo Máximo:** Red de Distribución (6 nodos, 8 arcos capacitados, Flujo óptimo = 15, Corte $S/T = 15$).
      - **Flujo a Costo Mínimo:** Red 4 Nodos Capacitada ($Z^*=26$), Modelo de Transporte ($2\times 3$, $Z^*=350$) y Transbordo Multidestino (5 nodos, $Z^*=24$).
-     - **Problema de Transporte (PDF):** Esquina Noroeste ($Z=1{,}700$), Costo Mínimo LCM ($Z=1{,}100$) y Aproximación de Vogel ($Z=1{,}100$) sobre el mismo problema $3\times 3$ balanceado de 3 plantas y 3 ciudades.
+     - **Problema de Transporte:** Esquina Noroeste ($Z=1{,}700$), Costo Mínimo LCM ($Z=1{,}100$) y Aproximación de Vogel ($Z=1{,}100$) sobre el mismo problema $3\times 3$ balanceado de 3 plantas y 3 ciudades.
 
 ---
 
@@ -205,41 +206,33 @@ $$\max \; Z = \mathbf{c}^T \mathbf{x} \quad \text{sujeto a} \quad \mathbf{A}\mat
 
 1. **Normalización:** Se agregan variables de holgura $s_i \ge 0$ para cada restricción $\le$. Si existen restricciones $\ge$ o $=$, se incorporan variables de exceso $e_i \ge 0$ y artificiales $a_i \ge 0$.
 2. **Fase 1 (si existen variables artificiales):**
+
    $$\min \; W = \sum_{i} a_i$$
+
    - Si el valor óptimo $W^* = 0$, la base obtenida es factible y se pasa a la Fase 2.
    - Si $W^* > 0$, el problema es **infactible**.
 3. **Fase 2:** Se restaura la función objetivo original $Z$ y se itera hasta que todos los costos reducidos cumplan la condición de optimalidad ($\bar{c}_j \ge 0$ en maximización canónica).
 4. **Criterio del Pivote:**
    - **Variable Entrante:** Coeficiente más favorable en la fila de costos reducidos.
    - **Variable Saliente (Prueba de la Razón Mínima):**
+
      $$\theta = \min_{i} \left\{ \frac{b_i}{a_{ik}} \;\middle|\; a_{ik} > 0 \right\}$$
+
    - **Actualización:** Eliminación de Gauss-Jordan sobre toda la tabla simplex.
 
 ---
 
 ### 3. Método Simplex Revisado (Formulación Matricial con $B^{-1}$)
 
-En lugar de transformar la matriz completa en cada paso, el **Simplex Revisado** mantiene explícitamente únicamente la inversa de la base actual $\mathbf{B}^{-1}$ ($m \times m$):
+En lugar de transformar la matriz completa en cada paso, el **Simplex Revisado** mantiene explícitamente únicamente la inversa de la base actual $\mathbf{B}^{-1}$ ($m \times m$). Cada iteración ejecuta cuatro pasos:
 
-```
-       ┌───────────────────────────────┐
-       │   Base Actual B e Inversa B⁻¹ │
-       └──────────────┬────────────────┘
-                      │
-       1. Multiplicadores duales:  πᵀ = c_Bᵀ · B⁻¹
-                      │
-       2. Costos reducidos:       z_j - c_j = πᵀ · A_j - c_j
-                      │
-       3. Columna transformada:   d = B⁻¹ · A_k (variable entrante k)
-                      │
-       4. Razón mínima & Actualización de B⁻¹ mediante matriz elemental E
-```
+1. **Multiplicadores duales:** calcula el vector de precios sombra $\boldsymbol{\pi}^T = \mathbf{c}_B^T \mathbf{B}^{-1}$.
+2. **Costos reducidos bajo demanda:** evalúa $\bar{c}_j = \boldsymbol{\pi}^T \mathbf{A}_j - c_j$ solo para las variables no básicas candidatas y selecciona la variable entrante.
+3. **Columna transformada:** obtiene $\mathbf{d} = \mathbf{B}^{-1} \mathbf{A}_k$ de la variable entrante $k$ para aplicar la prueba de la razón mínima.
+4. **Actualización de la base:** realiza el pivote con la matriz elemental $\mathbf{E}$ y reemplaza $\mathbf{B}^{-1}$ sin reconstruir la tabla completa.
 
-- **Vector de Precios Sombra / Multiplicadores Duales:**
-  $$\boldsymbol{\pi}^T = \mathbf{c}_B^T \mathbf{B}^{-1}$$
-- **Generación Bajo Demanda de Costos Reducidos:**
-  $$\bar{c}_j = \boldsymbol{\pi}^T \mathbf{A}_j - c_j$$
 - **Solución Básica Actual:**
+
   $$\mathbf{x}_B = \mathbf{B}^{-1} \mathbf{b}$$
 
 ---
@@ -274,7 +267,7 @@ Para modelos bidimensionales ($x_1, x_2$), el motor proyecta en un lienzo intera
 - Las rectas frontera de cada restricción: $a_{i1} x_1 + a_{i2} x_2 = b_i$.
 - Las zonas de no negatividad ($x_1 \ge 0, x_2 \ge 0$).
 - La región factible convexa sombreada.
-- La familia de curvas de nivel de la función objetivo $Z = c_1 x_1 + c_2 x_2$ y su vector gradiente ortogonal.
+- El vértice óptimo señalado con su etiqueta de coordenadas.
 - El camino poligonal trazado por los pivotes del Simplex navegando de un punto extremo a otro hasta el vértice óptimo.
 
 ---
@@ -314,7 +307,7 @@ graph TD
         
         subgraph ModCIMS["Módulo I: COIS-IMS"]
             Calc["CalculatorPanel (Matriz Dinámica & Presets)"]
-            Proc["ProcessPanel (Reproductor Paso a Paso & Fórmulas LaTeX)"]
+            Proc["ProcessPanel (Reproductor Paso a Paso & Resultados Exactos)"]
             Plot["Plot2D (Visualizador Geométrico en Canvas)"]
         end
         
@@ -349,7 +342,6 @@ graph TD
     Nav --> Hub
     
     Calc --> RSimplex
-    NetApp --> RNet
     Nav --> RHealth
     
     MainApp --> Cors
@@ -364,6 +356,8 @@ graph TD
     RevSimplex --> SensEngine
 ```
 
+> **Nota:** el módulo COIS-Networks resuelve todos sus algoritmos (Húngaro, flujos y transporte) **dentro del navegador**, sin consumir la API REST; el router `routes_networks.py` queda disponible para clientes externos. Solo COIS-IMS depende del backend (`/api/solve/*`) y del sondeo `/health`.
+
 ---
 
 ## 📂 Estructura del Proyecto
@@ -372,6 +366,11 @@ graph TD
 COIS-Calculadora-de-Operaciones-Investigativas-Suite/
 ├── .gitignore                         # Reglas de exclusión de Git (Python, Node, cachés, OS)
 ├── README.md                          # Documentación maestra del sistema
+│
+├── docs/                              # Documentación de usuario
+│   ├── Manual-Usuario-COIS.docx       # Manual de usuario completo (Word)
+│   ├── generar_manual.py              # Script que regenera el manual con python-docx
+│   └── capturas/                      # Capturas de pantalla del manual (16 PNG)
 │
 ├── backend/                           # Núcleo Matemático y Servicios REST (FastAPI)
 │   ├── api/                           # Enrutadores modulares de la API
@@ -435,6 +434,7 @@ COIS-Calculadora-de-Operaciones-Investigativas-Suite/
     │   └── style.css                  # Tokens globales, variables de color y tipografía
     ├── index.html                     # Plantilla HTML5 con fuentes Inter y JetBrains Mono
     ├── package.json                   # Dependencias y scripts de Node.js
+    ├── package-lock.json              # Árbol de versiones exactas de npm
     └── vite.config.js                 # Configuración del empaquetador Vite
 ```
 
@@ -533,6 +533,22 @@ pytest backend/tests -v -s
 
 ---
 
+## 🎯 Uso Rápido
+
+Con ambos servidores en marcha, el flujo básico de uso es:
+
+1. Abre `http://localhost:5173/` en tu navegador: aparece el **hub central de módulos** con las tarjetas de COIS-IMS y COIS-Networks.
+2. Comprueba el indicador **«API Conectada»** en la esquina superior derecha. Si está en ámbar (*API Desconectada*) o rojo (*Error API*), revisa la terminal del backend.
+3. Entra al módulo que necesites con su botón de inicio. El botón **«‹ Módulos»** de la barra superior siempre devuelve al hub.
+4. Carga un problema de ejemplo desde el menú superior (**«Seleccionar Configuraciones»** en COIS-IMS o **«Seleccionar Ejercicios»** en COIS-Networks) o escribe tus propios datos desde cero.
+5. En COIS-IMS pulsa **«⚡ Resolver Modelo»** (o la tecla **Enter** desde cualquier campo); en COIS-Networks pulsa el botón de cálculo de la pestaña activa.
+6. Lee el resultado paso a paso en el panel de resultados: estados (*OPTIMAL*, *UNBOUNDED*, *INFEASIBLE*…), tablas de iteración, sensibilidad y gráfico 2D.
+7. Alterna **«Fracción (½)»** y **«Decimal (0.5)»** en la barra superior para mostrar los números como fracciones exactas o decimales redondeados a 4 cifras.
+
+> **Nota:** COIS-Networks ejecuta todos sus algoritmos **dentro de tu navegador** (no necesita el backend); COIS-IMS sí requiere el backend en ejecución para resolver. El aviso **«Aviso Académico»** (botón `?` del hub) describe el uso permitido de la plataforma.
+
+---
+
 ## 📡 Documentación de la API REST
 
 | Método | Endpoint | Módulo | Descripción |
@@ -541,7 +557,7 @@ pytest backend/tests -v -s
 | `GET` | `/api/examples` | COIS-IMS | Obtiene el catálogo de problemas didácticos preconfigurados. |
 | `POST` | `/api/solve/standard` | COIS-IMS | Resuelve mediante el **Método Simplex Tabular** (con Dos Fases si aplica). |
 | `POST` | `/api/solve/revised` | COIS-IMS | Resuelve mediante el **Método Simplex Revisado** matricial ($\mathbf{B}^{-1}$). |
-| `POST` | `/api/solve/compare` | COIS-IMS | Ejecuta ambos solvers en paralelo y genera métricas comparativas. |
+| `POST` | `/api/solve/compare` | COIS-IMS | Ejecuta ambos métodos sobre el mismo modelo y devuelve la verificación de consistencia y los tiempos comparativos. |
 | `GET` | `/api/networks/status` | COIS-Networks | Retorna los algoritmos y estado del motor de optimización de redes. |
 
 ### Ejemplo de Solicitud JSON (`POST /api/solve/standard`):
@@ -567,32 +583,40 @@ pytest backend/tests -v -s
 ```json
 {
   "status": "OPTIMAL",
-  "objective_value": "36",
-  "optimal_solution": {
-    "x1": "2",
-    "x2": "6"
+  "method_used": "STANDARD_SIMPLEX",
+  "message": "Solución óptima global encontrada con éxito.",
+  "objective_type": "MAXIMIZE",
+  "optimal_value": { "fraction": "36", "decimal": 36.0, "latex": "36" },
+  "solution": {
+    "x1": { "fraction": "2", "decimal": 2.0, "latex": "2" },
+    "x2": { "fraction": "6", "decimal": 6.0, "latex": "6" },
+    "s1": { "fraction": "2", "decimal": 2.0, "latex": "2" },
+    "s2": { "fraction": "0", "decimal": 0.0, "latex": "0" },
+    "s3": { "fraction": "0", "decimal": 0.0, "latex": "0" }
   },
-  "iterations": [
+  "variable_names": ["x1", "x2"],
+  "all_variable_names": ["x1", "x2", "s1", "s2", "s3"],
+  "tabular_iterations": [
     {
-      "iteration_number": 0,
-      "basic_variables": ["s1", "s2", "s3"],
-      "tableau": [
-        ["1", "0", "1", "0", "0", "4"],
-        ["0", "2", "0", "1", "0", "12"],
-        ["3", "2", "0", "0", "1", "18"],
-        ["-3", "-5", "0", "0", "0", "0"]
-      ]
+      "iteration": 0,
+      "phase": 1,
+      "description": "Iteración 0 (Fase 1): Entra 'x1' (columna 1) y sale 's1' (fila 1) con elemento pivote 1.",
+      "headers": ["x1", "x2", "s1", "s2", "s3", "RHS"],
+      "basic_vars": ["s1", "s2", "s3"],
+      "entering_var": "x1",
+      "leaving_var": "s1",
+      "is_optimal": false
     }
   ],
-  "sensitivity_analysis": {
-    "shadow_prices": [
-      { "constraint": "R1", "shadow_price": "0", "status": "Non-Binding" },
-      { "constraint": "R2", "shadow_price": "3/2", "status": "Binding" },
-      { "constraint": "R3", "shadow_price": "1", "status": "Binding" }
-    ]
-  }
+  "execution_time_ms": 2.13
 }
 ```
+
+**Notas sobre la respuesta:**
+
+- Cada valor numérico es un objeto `{ fraction, decimal, latex }` con su representación fraccionaria exacta, decimal y en sintaxis LaTeX.
+- El extracto omite los campos `revised_iterations` (iteraciones del método revisado, también presentes en respuestas `standard`) y `sensitivity_report` (`variables[]` y `constraints[]` con costos reducidos, precios sombra y rangos admisibles).
+- La respuesta de `/api/solve/compare` añade `standard_result`, `revised_result`, `is_consistent` y `total_comparison_time_ms`.
 
 ---
 

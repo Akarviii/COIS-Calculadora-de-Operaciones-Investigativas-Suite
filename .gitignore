@@ -102,3 +102,6 @@ scratch/
 # Logs & Temporary Files
 logs/
 *.log
+
+# Documentación de usuario local (no se sube al repositorio)
+docs/
